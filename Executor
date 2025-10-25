@@ -1,0 +1,52 @@
+Script started on Sun Oct 26 02:08:49 2025
+^C[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h[7mnpm install[27m[11D[27mn[27mp[27mm[27m [27mi[27mn[27ms[27mt[27ma[27ml[27ml[?2004l
+[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K
+up to date, audited 410 packages in 2s
+[1G[0K⠴[1G[0K
+[1G[0K⠴[1G[0K118 packages are looking for funding
+[1G[0K⠴[1G[0K  run `npm fund` for details
+[1G[0K⠴[1G[0K
+found [32m[1m0[22m[39m vulnerabilities
+[1G[0K⠴[1G[0K[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h[7mnpm run compile[27m[15D[27mn[27mp[27mm[27m [27mr[27mu[27mn[27m [27mc[27mo[27mm[27mp[27mi[27ml[27me[?2004l
+
+> script-executor@0.0.1 compile
+> tsc -p ./
+
+[1G[0K[1G[0K⠙[1G[0K[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h[7mnpx vsce package[27m[16D[27mn[27mp[27mx[27m [27mv[27ms[27mc[27me[27m [27mp[27ma[27mc[27mk[27ma[27mg[27me[?2004l
+[1G[0KExecuting prepublish script 'npm run vscode:prepublish'...
+
+> script-executor@0.0.1 vscode:prepublish
+> npm run compile
+
+[1G[0K
+> script-executor@0.0.1 compile
+> tsc -p ./
+
+[1G[0K[1G[0K⠙[1G[0K[1G[0K⠙[1G[0K[43m[30m WARNING [39m[49m A 'repository' field is missing from the 'package.json' manifest file.
+Use --allow-missing-repository to bypass.
+[1G[0JDo you want to continue? [y/N] [32Gy
+[43m[30m WARNING [39m[49m LICENSE, LICENSE.md, or LICENSE.txt not found
+[1G[0JDo you want to continue? [y/N] [32Gy
+[104m[30m INFO [39m[49m [1m[34mFiles included in the VSIX:[39m[22m
+[1m[34m[39m[22m[1mscript-executor-0.0.1.vsix[22m
+├─ [Content_Types].xml 
+├─ extension.vsixmanifest 
+└─ [1mextension/[22m
+   ├─ Executor [90m[2.73 KB][39m
+   ├─ package.json [90m[2.36 KB][39m
+   ├─ readme.md [90m[0.81 KB][39m
+   ├─ run.sh [90m[0.68 KB][39m
+   ├─ 使用说明.md [33m[12 KB][39m
+   ├─ 安装指南.md [90m[5.01 KB][39m
+   ├─ [1m.claude/[22m
+   │  └─ settings.local.json [90m[0.39 KB][39m
+   └─ [1mout/[22m
+      └─ extension.js [90m[4.83 KB][39m
+
+[42m[30m DONE [39m[49m Packaged: /Users/cyl/data/vscode-plugin/script-runner/script-executor-0.0.1.vsix [1m(10 files, 12.98 KB)[22m
+[1G[0K⠙[1G[0K[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h[7mcode --install-extension script-executor-0.0.1.vsix[27m[51D[27mc[27mo[27md[27me[27m [27m-[27m-[27mi[27mn[27ms[27mt[27ma[27ml[27ml[27m-[27me[27mx[27mt[27me[27mn[27ms[27mi[27mo[27mn[27m [27ms[27mc[27mr[27mi[27mp[27mt[27m-[27me[27mx[27me[27mc[27mu[27mt[27mo[27mr[27m-[27m0[27m.[27m0[27m.[27m1[27m.[27mv[27ms[27mi[27mx[?2004l
+Installing extensions...
+Extension 'script-executor-0.0.1.vsix' was successfully installed.
+[1m[7m%[27m[1m[0m                                                                                                                                                       [0m[27m[24m[J(base) cyl@CylAlon script-runner % [K[?2004h

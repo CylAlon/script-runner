@@ -1,0 +1,24 @@
+# 编译输出
+out
+dist
+*.vsix
+
+# 依赖
+node_modules
+
+# IDE
+.vscode-test/
+.idea
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 临时文件
+*.log
+.claude
