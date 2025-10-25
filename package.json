@@ -1,15 +1,30 @@
 {
   "name": "script-executor",
   "displayName": "Script Executor",
-  "description": "一个方便执行自定义脚本的VSCode插件",
+  "description": "快速执行自定义脚本命令，支持参数化脚本、内置NPM/Git命令",
   "version": "1.0.0",
-   "publisher": "CylAlon",    
-    "author": "CylAlon",             
-    "license": "MIT",   
-    "repository": {
+  "publisher": "CylAlon",
+  "author": "CylAlon",
+  "license": "MIT",
+  "repository": {
     "type": "git",
     "url": "https://github.com/CylAlon/script-runner"
-  },           
+  },
+  "bugs": {
+    "url": "https://github.com/CylAlon/script-runner/issues"
+  },
+  "keywords": [
+    "script",
+    "executor",
+    "terminal",
+    "npm",
+    "git",
+    "command",
+    "shell",
+    "task",
+    "runner",
+    "automation"
+  ],
   "engines": {
     "vscode": "^1.80.0"
   },
