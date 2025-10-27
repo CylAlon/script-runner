@@ -121,6 +121,24 @@
           "type": "boolean",
           "default": true,
           "description": "是否启用内置的常用命令（npm 和 git 操作）"
+        },
+        "scriptExecutor.terminalReuseStrategy": {
+          "type": "string",
+          "enum": ["smart", "always", "never"],
+          "default": "smart",
+          "enumDescriptions": [
+            "智能检测：如果终端正在运行交互式程序（如 claude-cli），则创建新终端；否则复用现有终端",
+            "总是复用：始终使用同一个终端执行命令",
+            "从不复用：每次执行命令都创建新终端"
+          ],
+          "description": "终端复用策略"
+        },
+        "scriptExecutor.terminalIdleTimeout": {
+          "type": "number",
+          "default": 10,
+          "minimum": 0,
+          "maximum": 300,
+          "description": "终端空闲超时时间（秒）。在智能检测模式下，如果距离上次命令执行超过此时间，将创建新终端以避免干扰可能的交互式程序。设为 0 表示始终复用同一终端。"
         }
       }
     }

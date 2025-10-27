@@ -2,6 +2,15 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// 全局终端实例
+let sharedTerminal: vscode.Terminal | undefined;
+
+// 记录最后一次命令执行的时间
+let lastCommandTime: number = 0;
+
+// 记录终端创建的时间
+let terminalCreatedTime: number = 0;
+
 // 参数选项接口
 interface ParamOption {
     label: string;  // 显示给用户的标签
@@ -138,6 +147,16 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
+
+    // 监听终端关闭事件，清理终端引用
+    context.subscriptions.push(
+        vscode.window.onDidCloseTerminal((closedTerminal) => {
+            if (closedTerminal === sharedTerminal) {
+                sharedTerminal = undefined;
+                terminalCreatedTime = 0;
+            }
+        })
+    );
 }
 
 // 从 .vscode/scripts.json 读取项目级脚本配置
@@ -295,9 +314,105 @@ function replaceCommandParams(command: string, paramValues: { [key: string]: str
 
 // 在VSCode终端中执行命令
 function executeTerminalCommand(command: string) {
-    const terminal = vscode.window.createTerminal('Script Executor');
-    terminal.show();
-    terminal.sendText(command);
+    const config = vscode.workspace.getConfiguration('scriptExecutor');
+    const reuseStrategy = config.get<string>('terminalReuseStrategy', 'smart');
+
+    // 检查终端是否存在且未被关闭
+    const allTerminals = vscode.window.terminals;
+    const terminalExists = sharedTerminal && allTerminals.includes(sharedTerminal);
+
+    let shouldCreateNewTerminal = false;
+
+    // 根据策略决定是否创建新终端
+    if (reuseStrategy === 'never') {
+        // 总是创建新终端
+        shouldCreateNewTerminal = true;
+    } else if (reuseStrategy === 'always') {
+        // 总是复用，只有在终端不存在时才创建
+        shouldCreateNewTerminal = !terminalExists;
+    } else if (reuseStrategy === 'smart') {
+        // 智能检测
+        if (!terminalExists) {
+            shouldCreateNewTerminal = true;
+        } else {
+            // 检测终端是否可能正在运行交互式程序
+            const mightBeInteractive = isTerminalLikelyInteractive(sharedTerminal!);
+
+            if (mightBeInteractive) {
+                shouldCreateNewTerminal = true;
+            }
+        }
+    }
+
+    // 创建或复用终端
+    if (shouldCreateNewTerminal || !terminalExists) {
+        // 如果是智能模式且检测到交互式程序，给出提示
+        if (reuseStrategy === 'smart' && terminalExists) {
+            vscode.window.showInformationMessage(
+                '检测到终端可能正在运行交互式程序，已创建新终端执行命令'
+            );
+        }
+        sharedTerminal = vscode.window.createTerminal('Script Executor');
+        // 记录终端创建时间
+        terminalCreatedTime = Date.now();
+    }
+
+    // 记录命令执行时间
+    lastCommandTime = Date.now();
+
+    // 显示终端并执行命令
+    sharedTerminal!.show();
+
+    // 优先使用 Shell Integration 执行命令（更可靠）
+    if (sharedTerminal!.shellIntegration) {
+        sharedTerminal!.shellIntegration.executeCommand(command);
+    } else {
+        sharedTerminal!.sendText(command);
+    }
+}
+
+// 检测终端是否可能正在运行交互式程序
+function isTerminalLikelyInteractive(terminal: vscode.Terminal): boolean {
+    const config = vscode.workspace.getConfiguration('scriptExecutor');
+    const idleTimeout = config.get<number>('terminalIdleTimeout', 10);
+
+    // 如果超时设置为 0，表示始终复用，不检测
+    if (idleTimeout === 0) {
+        return false;
+    }
+
+    // 如果终端是新创建的（创建后还没超过空闲超时时间），认为是干净的，可以复用
+    // 这样可以避免刚创建的终端又被检测为交互式而反复创建新终端
+    const timeSinceCreation = (Date.now() - terminalCreatedTime) / 1000;
+    if (terminalCreatedTime > 0 && timeSinceCreation < idleTimeout) {
+        return false;
+    }
+
+    // 检查距离上次命令执行的时间
+    const timeSinceLastCommand = (Date.now() - lastCommandTime) / 1000; // 转换为秒
+
+    // 如果距离上次执行时间很短，认为是连续执行命令，终端状态正常
+    if (timeSinceLastCommand < 2) {
+        return false;
+    }
+
+    // 如果距离上次命令执行时间超过配置的空闲超时时间，
+    // 且终端创建后也超过了空闲超时时间，
+    // 认为终端可能正在运行交互式程序或用户可能手动输入了其他命令
+    if (timeSinceLastCommand >= idleTimeout) {
+        return true;
+    }
+
+    // 在超时时间内，检查 Shell Integration 状态
+    // 注意：即使在运行交互式程序时，shellIntegration 也可能存在
+    // 所以这不是一个完全可靠的指标
+    if (!terminal.shellIntegration) {
+        // 如果没有 Shell Integration，可能是在运行交互式程序
+        return true;
+    }
+
+    // 其他情况认为终端状态正常
+    return false;
 }
 
 // 扩展停用时调用
